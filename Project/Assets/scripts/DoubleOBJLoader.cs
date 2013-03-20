@@ -24,23 +24,27 @@ public class DoubleOBJLoader : MonoBehaviour {
 	IEnumerator LoadNewOBJ(string path)  {
 		Debug.Log ("loading OBJs at " + path);
 		
-		GameObject loaderCopy = Instantiate(loaderPrefab,Vector3.zero, Quaternion.identity) as GameObject;
+		GameObject loaderCopy = Instantiate(loaderPrefab,loaderPrefab.transform.position, 
+											loaderPrefab.transform.rotation) as GameObject;
+		
 		lastcreated = loaderCopy;
-		Transform front = loaderCopy.transform.FindChild("frontMesh");
-		Transform back  = loaderCopy.transform.FindChild("backMesh");
+		loaderCopy.SetActive(false);
 		
-		OBJ objectLoader1 = front.gameObject.AddComponent<OBJ>();
-		OBJ objectLoader2 = back.gameObject.AddComponent<OBJ>();
+		//Transform front = loaderCopy.transform.FindChild("frontMesh");
+		//Transform back  = loaderCopy.transform.FindChild("backMesh");
+		
+		OBJ objectLoader = loaderCopy.gameObject.AddComponent<OBJ>();
+		//OBJ objectLoader2 = back.gameObject.AddComponent<OBJ>();
 
-		objectLoader1.objPath = path+"/mesh1.obj";
-		objectLoader2.objPath = path+"/mesh2.obj";
+		objectLoader.objPath = path+"/mesh.obj";
+		//objectLoader2.objPath = path+"/mesh2.obj";
 		
-		objectLoader1.material = defaultMaterial;
-		objectLoader2.material = defaultMaterial;
+		objectLoader.material = defaultMaterial;
+		//objectLoader2.material = defaultMaterial;
 		
-		yield return StartCoroutine( objectLoader1.Load(objectLoader1.objPath) ); //objectLoader1.CreateOBJ();
+		yield return StartCoroutine( objectLoader.Load(objectLoader.objPath) ); //objectLoader1.CreateOBJ();
 		//SetupColliders(front.gameObject, defaultMaterial);
-		yield return StartCoroutine( objectLoader2.Load(objectLoader2.objPath) ); 
+		//yield return StartCoroutine( objectLoader2.Load(objectLoader2.objPath) ); 
 		//SetupColliders(back.gameObject, defaultMaterial);
 		
 		WWW photo = new WWW(path+"/photo.jpg");
@@ -55,6 +59,7 @@ public class DoubleOBJLoader : MonoBehaviour {
 		//floor.renderer.material.SetTextureScale("Tiling", new Vector2(100,0));
 		//floor.renderer.material.mainTexture = www.texture;
 		
+		/*
 		MeshFilter[] meshFilters = loaderCopy.GetComponentsInChildren<MeshFilter>() as MeshFilter[];
     	CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 		for (int i = 0; i < meshFilters.Length; i++){
@@ -62,25 +67,20 @@ public class DoubleOBJLoader : MonoBehaviour {
         	combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
         	meshFilters[i].gameObject.SetActive(false);
     	}
-		MeshFilter filter = loaderCopy.gameObject.AddComponent<MeshFilter>();
-    	filter.mesh = new Mesh();
-    	filter.mesh.CombineMeshes(combine);
-		loaderCopy.gameObject.AddComponent<MeshRenderer>();
+    	*/
+		
+		MeshFilter filter = loaderCopy.gameObject.GetComponent<MeshFilter>();
+		filter.mesh.RecalculateNormals();
 		loaderCopy.gameObject.renderer.sharedMaterial = mat;
-	
-				
+		
 		loaderCopy.gameObject.AddComponent<Rigidbody>();
 		MeshCollider collider = loaderCopy.gameObject.AddComponent<MeshCollider>();
 		collider.sharedMesh = filter.mesh;
 		collider.convex = true;
-		filter.mesh.RecalculateNormals();
-		Destroy (front.gameObject);
-		Destroy (back.gameObject);
-
-		Resources.UnloadUnusedAssets();
 		
+		//Resources.UnloadUnusedAssets();
 		//Debug.Log ("mesh renderer? " + back.gameObject.ren<MeshRenderer>());
-		
+		loaderCopy.SetActive(true);
 	}
 	
 	
@@ -88,7 +88,7 @@ public class DoubleOBJLoader : MonoBehaviour {
 		obj.AddComponent<MeshRenderer>();
 		obj.renderer.sharedMaterial = mat;
 		//obj.AddComponent<Rigidbody>();
-		MeshFilter filter = obj.GetComponent<MeshFilter>();
+		//MeshFilter filter = obj.GetComponent<MeshFilter>();
 		//MeshCollider collider = obj.AddComponent<MeshCollider>();
 		//collider.sharedMesh = filter.mesh;
 		//collider.convex = true;
