@@ -50,6 +50,7 @@ public class MeshOSCListener : MonoBehaviour  {
 		if(address == "/mesh"){
 			BroadcastMessage("LoadNewOBJ", args[0] as string);
 		}
+		
 		/*
 		if (address == "/TSPS/personEntered/") {
 			addPerson(args);

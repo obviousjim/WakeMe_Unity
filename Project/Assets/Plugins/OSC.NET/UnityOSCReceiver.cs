@@ -29,6 +29,7 @@ public class UnityOSCReceiver : MonoBehaviour {
 	}
 	
 	public void OnGUI(){
+		if(true) return;
 		if(GUILayout.Button("Reconnect")){
 			if(connected){
 				disconnect();
