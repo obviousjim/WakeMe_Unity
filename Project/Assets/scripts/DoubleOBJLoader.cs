@@ -1,7 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DoubleOBJLoader : MonoBehaviour {
+	
+	public List<GameObject> meshes;
 	
 	public GameObject loaderPrefab;
 	public Material defaultMaterial;
@@ -62,10 +65,21 @@ public class DoubleOBJLoader : MonoBehaviour {
 		
 		Debug.Log ("STEP 5 " + (Time.time - startTime) );
 		
+		meshes.Add( loaderCopy );
+		if(meshes.Count > 100){
+			GameObject toDelete = meshes[0];
+			meshes.RemoveAt( 0 );
+			
+			Destroy( toDelete );
+			if(Random.Range(0.0f, 1.0f) > .8){
+				Resources.UnloadUnusedAssets();
+			}
+			
+		}
+		
 		loaderCopy.SetActive(true);
 		
-		Debug.Log ("STEP 6 " + (Time.time - startTime) );
-		
+		Debug.Log( meshes.Count );
 	}
 	
 	void MeshesComplete(GameObject meshObject){
