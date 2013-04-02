@@ -11,6 +11,7 @@ public class DoubleOBJLoader : MonoBehaviour {
 	public Shader sourceShader;
 	public Transform spawnTarget;
 	public GameObject lastcreated;
+	
 	// Use this for initialization
 	void Start () {
 		
@@ -19,10 +20,19 @@ public class DoubleOBJLoader : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKeyDown("r")){
-			lastcreated.transform.position = spawnTarget.position;
-			lastcreated.transform.rotation = spawnTarget.rotation;
+			if(meshes.Count > 0){
+				GameObject toDelete = meshes[0];
+				meshes.RemoveAt( 0 );
+				
+				Destroy( toDelete );
+				if(Random.Range(0.0f, 1.0f) > .8){
+					Resources.UnloadUnusedAssets();
+				}
+			}
 		}
 	}
+	
+	
 	
 	IEnumerator LoadNewOBJ(string path)  {
 		float startTime = Time.time;
